@@ -22,14 +22,15 @@ class Vector {
    static const int default_sz = 2;
 
    public:
-    Vector()
+    Vector() : p( std::make_unique<T[]>( Vector::default_sz )  ), next_index{0}  
     {
-      //--p.reset( new T[Vector::default_sz] );  
-      p =  std::make_unique<T[]>( Vector::default_sz );  
-      next_index = 0;
     }
 
     Vector(const Vector& lhs);
+    Vector(Vector&& lhs);
+
+    Vector& operator=(const Vector& lhs);
+    Vector& operator=(Vector&& lhs);
 
     void push_back(const T& t);
 
@@ -40,10 +41,6 @@ class Vector {
     T& operator[](int);
 
     const T& operator[](int) const;
-
-    Vector& operator=(const Vector& lhs);
-
-    Vector& operator=(Vector&& lhs);
 
     void* operator new (std::size_t size, void* ptr) noexcept;
 };
@@ -61,14 +58,14 @@ template<class T> void Vector<T>::grow()
 
   size = new_size;
   
-  p = std::move(ptr); // Q: Does unique_ptr have a partial template specialization for unique_ptr of array type?
+  p = std::move(ptr);
 
   ++next_index;
 } 
 
 template<class T> void Vector<T>::free()
 {
-  p.reset(); // <-- I don't think there is a reset for the array specialization?
+  p.reset(); 
   size = 0;
 }
 
@@ -83,6 +80,15 @@ template<class T> Vector<T>::Vector(const Vector& lhs)
   size = lhs.size;
 
   next_index = lhs.next_index;
+}
+
+template<class T> Vector<T>::Vector(Vector&& lhs)
+{
+  p = std::move(lhs.p); 
+
+  size = lhs.size;
+  next_index = lhs.next_index;
+  lhs.size = 0;
 }
 
 template<class T> void Vector<T>::push_back(const T& t)
@@ -106,7 +112,7 @@ template<class T> void  Vector<T>::push_back(T&& t)
 
 template<class T> template<class... ARGS> void Vector<T>::emplace_back(ARGS&& ... args)
 {
-   new(p + next_index) T{std::forward<ARGS>(args)...};
+   new(p + next_index) T{std::forward<ARGS>(args)...}; // <-- test this.
    
    next_index++; 
 }
