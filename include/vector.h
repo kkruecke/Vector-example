@@ -16,7 +16,6 @@ class Vector {
    int next_index;
 
    void grow(); 
-   void free();
 
    static const int growth_factor = 2;
    static const int default_sz = 2;
@@ -63,12 +62,6 @@ template<class T> void Vector<T>::grow()
   ++next_index;
 } 
 
-template<class T> void Vector<T>::free()
-{
-  p.reset(); 
-  size = 0;
-}
-
 template<class T> Vector<T>::Vector(const Vector& lhs)
 {
   p.reset(); 
@@ -112,7 +105,11 @@ template<class T> void  Vector<T>::push_back(T&& t)
 
 template<class T> template<class... ARGS> void Vector<T>::emplace_back(ARGS&& ... args)
 {
-   new(p + next_index) T{std::forward<ARGS>(args)...}; // <-- test this.
+   T *ptr = p.get();
+
+   T *location = ptr + next_index;
+
+   new(location) T{std::forward<ARGS>(args)...}; // <-- test this.
    
    next_index++; 
 }

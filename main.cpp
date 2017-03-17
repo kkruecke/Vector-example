@@ -57,6 +57,40 @@ template<class T, class ARG> std::shared_ptr<T> factory(ARG&& arg)
 
 struct Y {};
 
+class Employee {
+
+     std::string name;
+     int age;
+     int salary;
+  public:
+
+     Employee() {}
+     Employee(const std::string& _name, int _age, int _salary) :\
+             name{_name}, age{_age}, salary{_salary} {}
+     
+     Employee(Employee&& e) : name{std::move(e.name)}, age{e.age}, salary{e.salary} {}
+
+     Employee& operator=(const Employee& lhs)
+     {
+       if (this != &lhs) {
+          name = lhs.name;
+          age = lhs.age;
+          salary = lhs.salary;
+       }
+       return *this;
+     }
+
+     Employee& operator=(Employee&& lhs)
+     {
+       if (this != &lhs) {
+          name = std::move(lhs.name);
+          age = lhs.age;
+          salary = lhs.salary;
+       }
+       return *this;
+     }
+}; 
+
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -72,15 +106,18 @@ int main(int argc, char *argv[])
 
    shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };
    
-   Vector<int> v1;
-   Vector<int> v2;
-   
-   for (auto i = 0; i < 10; ++i) {
+   Vector<Employee> v1;
+
+   for (auto i = 0; i < 5; ++i) {
        
-       v1.push_back(i);
+       v1.push_back(Employee{});
    }
-   
- 
+
+   v1.push_back(Employee{"John Smith", 25, 100000});
+
+   v1.emplace_back("John Smith", 25, 100000);
+
+    
    return 0;
 
 }
