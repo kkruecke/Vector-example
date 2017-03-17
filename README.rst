@@ -18,3 +18,5 @@ So when, say, ``unique_ptr<std::string[]>`` is used, the partial template specia
 as they are different types.   
 
 See this excellent discussion of the tradeoffs of ``unique_ptr<T[]>``: http://stackoverflow.com/questions/16711697/is-there-any-use-for-unique-ptr-with-array
+
+See https://timsong-cpp.github.io/cppwp/unique.ptr.runtime for explanation of "see below d..." comment(s).

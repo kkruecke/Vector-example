@@ -1,4 +1,4 @@
-// Clang stl header outline for unique_ptr. See unique_ptr_array for the partial template specialization.
+// Clang stl header outline for unique_ptr
 #ifndef _LIBCPP_MEMORY
 #define _LIBCPP_MEMORY
 
@@ -183,48 +183,6 @@ struct default_delete<T[]>
     constexpr default_delete() noexcept = default;
     void operator()(T*) const noexcept;
     template <class U> void operator()(U*) const = delete;
-};
-
-template <class T, class D = default_delete<T>>
-class unique_ptr
-{
-public:
-    typedef see below pointer;
-    typedef T element_type;
-    typedef D deleter_type;
-
-    // constructors
-    constexpr unique_ptr() noexcept;
-    explicit unique_ptr(pointer p) noexcept;
-    unique_ptr(pointer p, see below d1) noexcept;
-    unique_ptr(pointer p, see below d2) noexcept;
-    unique_ptr(unique_ptr&& u) noexcept;
-    unique_ptr(nullptr_t) noexcept : unique_ptr() { }
-    template <class U, class E>
-        unique_ptr(unique_ptr<U, E>&& u) noexcept;
-    template <class U>
-        unique_ptr(auto_ptr<U>&& u) noexcept;
-
-    // destructor
-    ~unique_ptr();
-
-    // assignment
-    unique_ptr& operator=(unique_ptr&& u) noexcept;
-    template <class U, class E> unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
-    unique_ptr& operator=(nullptr_t) noexcept;
-
-    // observers
-    typename add_lvalue_reference<T>::type operator*() const;
-    pointer operator->() const noexcept;
-    pointer get() const noexcept;
-    deleter_type& get_deleter() noexcept;
-    const deleter_type& get_deleter() const noexcept;
-    explicit operator bool() const noexcept;
-
-    // modifiers
-    pointer release() noexcept;
-    void reset(pointer p = pointer()) noexcept;
-    void swap(unique_ptr& u) noexcept;
 };
 
 template <class T, class D>
