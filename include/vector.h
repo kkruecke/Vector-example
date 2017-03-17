@@ -139,7 +139,6 @@ template<class T> const T&    Vector<T>::operator[](int pos) const
 
     throw(std::out_of_range("pos not in range."));
   }
-
 }
                  
 template<class T> Vector<T>&  Vector<T>::operator=(const Vector& lhs)
