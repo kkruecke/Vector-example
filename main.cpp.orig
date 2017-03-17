@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+#include <memory>
+#include <utility>
+#include <vector>
+using namespace std;
+
+class A { // trivial example
+   std::string str;
+  public:
+    A(std::string& lhs) : str(lhs)
+    {
+      cout << " A::A(std::string& lhs) invoked." << endl;
+    }
+
+    A(std::string&& lhs) 
+    {
+      cout << " A::A(std::string&& lhs) invoked." << endl;
+    }
+};
+
+template<class T> struct template_parameter_type {
+  static void describe()
+  {
+    std::cout <<  "In non-specialized struct template_parameter_type<T>" << endl; 
+  }
+};
+
+template<class T> struct template_parameter_type<T&> {
+  static void describe()
+  {
+   std::cout <<  "In partial template specialization struct template_parameter_type<T&>"  << std::endl; 
+  }
+};
+
+template<class T> struct template_parameter_type<T&&> {
+  static void describe()
+  {
+   std::cout <<  "In partial template specialization struct template_parameter_type<T&&>"  << std::endl; 
+  }
+};
+
+template<class T, class ARG> std::shared_ptr<T> factory(ARG&& arg)
+{
+   template_parameter_type<ARG>::describe();
+
+   return std::shared_ptr<T>{new T(arg)};  // fails to invoke A(string&&) when string is rvalue??
+   //return std::shared_ptr<T>{new T(forward<ARG>(arg))};  
+}
+
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+   string lvaluestr{"lvaluestr"};
+
+   shared_ptr<A> ptr1 { factory<A>(lvaluestr) };
+
+   shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };
+          
+   return 0;
+}

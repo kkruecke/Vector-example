@@ -1,0 +1,7 @@
+Makefile
+dist/
+docs/
+build/
+nbproject/
+*~
+.*~
