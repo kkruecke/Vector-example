@@ -25,7 +25,7 @@ class Vector {
     Vector()
     {
       //--p.reset( new T[Vector::default_sz] );  
-      p =  std::make_unique( T[Vector::default_sz] );  
+      p =  std::make_unique<T[]>( Vector::default_sz );  
       next_index = 0;
     }
 
@@ -52,28 +52,23 @@ template<class T> void Vector<T>::grow()
 {
   auto new_size = size * Vector<T>::growth_factor; 
 
-  //--T *pp = reinterpret_cast<T*>( new char[new_size * sizeof(T) ] ); 
-  T *pp = reinterpret_cast<T *>( new char[new_size * sizeof(T) ] ); 
-  
-  std::unique_ptr<T[]> ptr { pp }; 
+  std::unique_ptr<T[]> ptr = std::make_unique<T[]>( new_size ); 
 
-  //--T *dest = ptr.get();
-  
   for (auto i = 0; i < size; ++i) {
       
       ptr[i] = std::move(p[i]); 
   }
-  
+
   size = new_size;
   
-  p.reset(ptr); // Q: Does unique_ptr have a partial template specialization for unique_ptr of array type?
+  p = std::move(ptr); // Q: Does unique_ptr have a partial template specialization for unique_ptr of array type?
 
   ++next_index;
 } 
 
 template<class T> void Vector<T>::free()
 {
-  p.reset();
+  p.reset(); // <-- I don't think there is a reset for the array specialization?
   size = 0;
 }
 
