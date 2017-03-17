@@ -1,9 +1,0 @@
-This article 
-
-    http://cpptruths.blogspot.com/2012/06/perfect-forwarding-of-parameter-groups.html
-    
-is excellent in explaining variadic template usage with ctors.
-
-This is good
-
-    http://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c/
