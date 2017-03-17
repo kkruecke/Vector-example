@@ -24,7 +24,8 @@ class Vector {
    public:
     Vector()
     {
-      p.reset( new T[Vector::default_sz] );  
+      //--p.reset( new T[Vector::default_sz] );  
+      p =  std::make_unique( T[Vector::default_sz] );  
       next_index = 0;
     }
 
@@ -52,7 +53,7 @@ template<class T> void Vector<T>::grow()
   auto new_size = size * Vector<T>::growth_factor; 
 
   //--T *pp = reinterpret_cast<T*>( new char[new_size * sizeof(T) ] ); 
-  T *pp = reinterpret_cast<T[]>( new char[new_size * sizeof(T) ] ); 
+  T *pp = reinterpret_cast<T *>( new char[new_size * sizeof(T) ] ); 
   
   std::unique_ptr<T[]> ptr { pp }; 
 
