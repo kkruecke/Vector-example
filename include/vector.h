@@ -111,7 +111,7 @@ template<class T> template<class... ARGS> void Vector<T>::emplace_back(ARGS&& ..
 
    new(location) T{std::forward<ARGS>(args)...}; // <-- test this.
    
-   next_index++; 
+   ++next_index; 
 }
 
 template<class T> T& Vector<T>::operator[](int pos)
